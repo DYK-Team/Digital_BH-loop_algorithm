@@ -1,7 +1,7 @@
 #
 # Digital BH-loop algorithm
 # Project repository on GitHub: https://github.com/DYK-Team/Digital_BH-loop_algorithm
-# 10/10/2023
+# 15/10/2023
 #
 # Authors:
 # Ekaterina Nefedova, Dr. Mark Nemirovich, Dr. Nikolay Udanov, and Prof. Larissa Panina
@@ -19,15 +19,15 @@ import tkinter as tk
 
 # Default input parameter values
 pi = np.pi  # pi-constant 3.1415....
-default_B_scale = 1.0
-default_H_scale = 1.0
-default_window_size = 5
+default_B_scale = 1.0  # This scale depends on the measurement units (V or mV) and the wire length and diameter
+default_H_scale = 1.0  # This scale depends on the measurement units (V or mV) and the wire length and diameter
+default_window_size = 5  # Moving Average Window. You can change from the GUI window.
 
 # Function to run the code with the entered parameters
 def run_code():
-    directory_path = directory_path_entry.get()
-    name = name_entry.get()
-    time_increment = float(time_increment_entry.get())
+    directory_path = directory_path_entry.get()  # Copy and paste the directory path to the GUI window
+    name = name_entry.get()  # Enter the file name without the CSV extension to the GUI window (e.g. 50kHz)
+    time_increment = float(time_increment_entry.get())  # Enter the time increment (s) to the GUI window
     B_scale = float(B_scale_entry.get())
     H_scale = float(H_scale_entry.get())
     window_size = int(window_size_entry.get())
@@ -35,11 +35,11 @@ def run_code():
     # Full file name, including the directory path and the csv extension
     file_name = directory_path + '\\' +name + '.csv'
 
-    # Data from CSV file
+    # Data from the CSV file (two columns without header)
     data = np.genfromtxt(file_name, delimiter=',')
-    response_values = data[:, 0]  # Response values (proportional to the magnetic induction)
-    sin_values = data[:, 1]  # Sinusoid values (scanning magnetic field)
-    N = len(sin_values)  # Number of points
+    response_values = data[:, 0]  # First column: response values which are proportional to the induction B
+    sin_values = data[:, 1]  # Second column: sinusoid values which are proportional to the scanning magnetic field H
+    N = len(sin_values)  # Number of points in each column
 
     # Time values based on the time increment
     time = np.arange(0, N * time_increment, time_increment)
@@ -50,15 +50,15 @@ def run_code():
     # Scenarios for selecting sine wave vertices
     scenario = 1 if sin_values[0] >= 0 else 2
 
-    # Skipping initial values
+    # Skipping initial values until the sinusoid changes sign. After this, the search for vertices begins.
     i = 0
     while i <= N - 1 and ((scenario == 1 and sin_values[i] >= 0) or (scenario == 2 and sin_values[i] <= 0)):
         i += 1
     start = i  # Start index
 
-    # Searching for the indices of the first positive and negative sine wave vertices
+    # Searching for the indices of the first positive and negative sinusoid vertices
 
-    # Set of indices near the positive vertex of the sine wave
+    # Set of indices near the positive vertex of the sinusoid
     def pset(start, y_values):
         positive_set = []
         i = start
@@ -69,7 +69,7 @@ def run_code():
         stop = i
         return np.array(positive_set), stop
 
-    # Set of indices near the negative vertex of the sine wave
+    # Set of indices near the negative vertex of the sinusoid
     def nset(start, y_values):
         negative_set = []
         i = start
@@ -87,11 +87,11 @@ def run_code():
         positive_set, stop = pset(start, sin_values)
         negative_set = nset(stop, sin_values)[0]
 
-    # Average indices for the negative and positive sine wave vertices
+    # Average indices for the found sets of the negative and positive sinusoid vertices
     positive_set_aver = float(sum(positive_set) / len(positive_set))
     negative_set_aver = float(sum(negative_set) / len(negative_set))
 
-    # Integer indices for the negative and positive sine wave vertices
+    # Integer indices for the found negative and positive sinusoid vertices
     pvertex = int(positive_set_aver)
     nvertex = int(negative_set_aver)
 
@@ -99,14 +99,14 @@ def run_code():
     T0 = abs(positive_set_aver - negative_set_aver) * time_increment * 2
     f0 = 1 / T0
 
-    # Average amplitude of the sinusoid calculated from two vertices
+    # Improving A0: average amplitude of the sinusoid calculated from two vertices
     A0 = (sin_values[pvertex] - sin_values[nvertex]) / 2.0
 
     # Estimation of the sinusoid phase (ph0) in radians
-    # Only positive phase in the range [0, 2 * pi] will be provided
+    # Only positive phase will be used (anticlockwise rotation)
     qT = int(abs(pvertex - nvertex) / 2)  # Index difference for the quarter period
     value = max(-1.0, min(sin_values[0] / A0, 1.0))  # Normalising the zero-index value and clamping it to [-1, 1]
-    phase = np.arcsin(value)  # Phase in the range [-pi/2, pi/2]
+    phase = np.arcsin(value)  # Phase calculated from the arcsin function in the range [-pi/2, pi/2]
     if scenario == 1:  # First scenario sin_values[0] >= 0
         if sin_values[qT] >= 0:
             ph0 = phase  # First quarter
@@ -123,17 +123,17 @@ def run_code():
     print('Estimated phase = ', ph0, ' rads')
     print('Estimated phase = ', np.degrees(ph0), ' degrees')
 
-    # Define the sinusoidal function
+    # Sinusoidal function used in the fitting
     def sinusoid(t, A, f, phase):
         return A * np.sin(2 * pi * f * t + phase)
 
-    # Fitting the data to the sinusoidal function
-    params, covariance = curve_fit(sinusoid, time, sin_values, p0=[A0, f0, ph0])
+    # Fitting the data (second column) to the sinusoid
+    params, covariance = curve_fit(sinusoid, time, sin_values, p0=[A0, f0, ph0])  # [A0, f0, ph0] - initial values
 
     # Extracted fitting parameters
     A_fit, f_fit, ph_fit = params
 
-    # Fitted curve
+    # Fitted sinusoid curve
     sinusoid_fit = sinusoid(time, A_fit, f_fit, ph_fit)
     ph_degrees = np.degrees(ph_fit)
 
@@ -144,7 +144,6 @@ def run_code():
     print('Fitted phase = ', ph_degrees, ' degrees')
 
     # Writing the parameters to the txt file
-
     with open(directory_path + '\\' + 'sinusoid_parameters.txt', 'w') as file:
         file.write('\n')
         file.write('Fitted amplitude = {}\n'.format(A_fit))
@@ -161,14 +160,20 @@ def run_code():
         t2 = (7.0 * pi / 2.0 - ph_fit) / (2.0 * pi * f_fit)
     t3 = t2 + 0.5 / f_fit
 
+    print('')
+    print('Reference time t1 = ', t1, ' s')
+    print('Reference time t2 = ', t2, ' s')
+    print('Reference time t3 = ', t3, ' s')
+
+    # Indexes corresponding to the reference time moments
     refindex1 = int(t1 / time_increment)
     refindex2 = int(t2 / time_increment)
     refindex3 = int(t3 / time_increment)
 
-    # print('t1/time_increment = ', int(t1/time_increment))
-    # print('t2/time_increment = ', int(t2/time_increment))
-    # print('pvertex = ', pvertex)
-    # print('nvertex = ', nvertex)
+    print('')
+    print('Reference index 1 = ', refindex1)
+    print('Reference index 2 = ', refindex2)
+    print('Reference index 3 = ', refindex3)
 
     # Plot the original data and the fitted curve
     plt.figure(figsize=(10, 6))
@@ -191,7 +196,7 @@ def run_code():
 
     plt.show()
 
-    # Forward integration
+    # Forward integration of the voltage response between the reference indexes 1 and 2
     B_forward = []
     H_forward = []
     integral_value = 0.0
@@ -201,7 +206,7 @@ def run_code():
             integral_value += 0.5 * (response_values[i] + response_values[i + 1]) * time_increment  # Trapezoid method
         B_forward.append(integral_value)
 
-    # Reverse integration
+    # Reverse integration of the voltage response between the reference indexes 2 and 3
     B_reverse = []
     H_reverse = []
     integral_value = 0.0
@@ -211,13 +216,13 @@ def run_code():
             integral_value += 0.5 * (response_values[i] + response_values[i + 1]) * time_increment  # Trapezoid method
         B_reverse.append(integral_value)
 
-    # Rescaling the fields
+    # Rescaling the magnetic induction B and the field H from the data values
     B_forward = np.array(B_forward) * B_scale
     H_forward = -np.array(H_forward) * H_scale
     lf = len(B_forward)  # Number of points in the forward BH curve
     B_reverse = np.array(B_reverse) * B_scale
     H_reverse = -np.array(H_reverse) * H_scale
-    lr = len(B_reverse)  # Number of points in the reverse BH curve
+    lr = len(B_reverse)  # Number of points in the reverse MH curve
 
     # Defining the concavity con_forward of the forward BH curve
     # B = af + bf * H is the straight line between the forward BH curve ends
@@ -266,15 +271,15 @@ def run_code():
     plt.figure(figsize=(10, 6))
     plt.plot(H_forward_smoothed, B_forward_smoothed, label='Smoothed B_forward vs. H_forward', color='blue')
     plt.plot(H_reverse_smoothed, B_reverse_smoothed, label='Smoothed B_reverse vs. H_reverse', color='red')
-    plt.xlabel('H')
-    plt.ylabel('B')
+    plt.xlabel('H (A/m)')
+    plt.ylabel('B (T)')
     plt.title('Smoothed Magnetic Hysteresis Loop')
     plt.legend()
     plt.grid(True)
 
     # Saving the data and smoothed curves to a CSV file
     data = np.column_stack((H_forward_smoothed, B_forward_smoothed, H_reverse_smoothed, B_reverse_smoothed))
-    header = ['H_forward', 'B_forward_smoothed', 'H_reverse', 'B_reverse_smoothed']
+    header = ['H_forward (A/m)', 'B_forward_smoothed (T)', 'H_reverse (A/m)', 'B_reverse_smoothed (T)']
 
     with open(directory_path + '\\' + 'smoothed_hysteresis_data.csv', 'w', newline='') as csv_file:
         writer = csv.writer(csv_file)
