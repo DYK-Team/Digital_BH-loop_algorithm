@@ -37,7 +37,7 @@ def run_code():
 
     # Data from CSV file
     data = np.genfromtxt(file_name, delimiter=',')
-    response_values = data[:, 0]  # Response values
+    response_values = data[:, 0]  # Response values (proportional to the magnetic induction)
     sin_values = data[:, 1]  # Sinusoid values (scanning magnetic field)
     N = len(sin_values)  # Number of points
 
@@ -105,8 +105,7 @@ def run_code():
     # Estimation of the sinusoid phase (ph0) in radians
     # Only positive phase in the range [0, 2 * pi] will be provided
     qT = int(abs(pvertex - nvertex) / 2)  # Index difference for the quarter period
-    value = max(-1.0,
-                min(sin_values[0] / A0, 1.0))  # Normalising the zero-index value and clamping it to the range [-1, 1]
+    value = max(-1.0, min(sin_values[0] / A0, 1.0))  # Normalising the zero-index value and clamping it to [-1, 1]
     phase = np.arcsin(value)  # Phase in the range [-pi/2, pi/2]
     if scenario == 1:  # First scenario sin_values[0] >= 0
         if sin_values[qT] >= 0:
