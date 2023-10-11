@@ -328,21 +328,17 @@ window_size_entry = tk.Entry(root)
 window_size_entry.insert(0, default_window_size)  # Default value
 window_size_entry.pack()
 
-# Create a frame to hold the buttons in one row
+# Frame to hold the buttons in one row
 button_frame = tk.Frame(root)
 button_frame.pack()
 
-# Create a frame to hold the buttons in one row
-button_frame = tk.Frame(root)
-button_frame.pack()
-
-# Create the "Run Code" button with some padding to the right
+# "Run Code" button with some padding to the right
 run_button = tk.Button(button_frame, text="Run Code", command=run_code)
 run_button.pack(side=tk.LEFT, padx=5)  # Adjust the padx value as needed
 
-# Create the "Stop Code" button with some padding to the left
+# "Stop Code" button with some padding to the left
 stop_button = tk.Button(button_frame, text="Stop Code", command=stop_code)
 stop_button.pack(side=tk.LEFT, padx=5)  # Adjust the padx value as needed
 
-# Start the main event loop
+# Main event loop
 root.mainloop()
