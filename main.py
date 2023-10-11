@@ -305,7 +305,7 @@ name_label.pack()
 name_entry = tk.Entry(root)
 name_entry.pack()
 
-time_increment_label = tk.Label(root, text="Time increment (s):")
+time_increment_label = tk.Label(root, text="Time Increment (s):")
 time_increment_label.pack()
 time_increment_entry = tk.Entry(root)
 time_increment_entry.pack()
@@ -328,10 +328,21 @@ window_size_entry = tk.Entry(root)
 window_size_entry.insert(0, default_window_size)  # Default value
 window_size_entry.pack()
 
-run_button = tk.Button(root, text="Run Code", command=run_code)
-run_button.pack()
+# Create a frame to hold the buttons in one row
+button_frame = tk.Frame(root)
+button_frame.pack()
 
-stop_button = tk.Button(root, text="Stop Code", command=stop_code)
-stop_button.pack()
+# Create a frame to hold the buttons in one row
+button_frame = tk.Frame(root)
+button_frame.pack()
 
+# Create the "Run Code" button with some padding to the right
+run_button = tk.Button(button_frame, text="Run Code", command=run_code)
+run_button.pack(side=tk.LEFT, padx=5)  # Adjust the padx value as needed
+
+# Create the "Stop Code" button with some padding to the left
+stop_button = tk.Button(button_frame, text="Stop Code", command=stop_code)
+stop_button.pack(side=tk.LEFT, padx=5)  # Adjust the padx value as needed
+
+# Start the main event loop
 root.mainloop()
