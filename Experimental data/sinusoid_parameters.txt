@@ -1,0 +1,5 @@
+
+Fitted amplitude = 15.099995113879167
+Fitted frequency = 49992.53693715317 Hz
+Fitted phase = 0.12758812005225068 rads
+Fitted phase = 7.310260795002432 degrees
