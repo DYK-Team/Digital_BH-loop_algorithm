@@ -8,7 +8,7 @@ Three files are provided as examples: 50kHz.csv (time increment 5e-8 s), 100kHz.
 A short manual (PDF file) will be provided.
 
 Authors:
-Ekaterina Nefedova, Dr. Mark Nemirovich, Dr. Nikolay Udanov, and Prof. Larissa Panina
+Ekaterina Nefedova, Dr. Mark Nemirovich, Dr. Nikolay Udanov, and Prof. Larissa Panina,
 MISiS, Moscow, Russia, https://en.misis.ru/
 
 Dr. Dmitriy Makhnovskiy (dmitriy.makhnovskiy@gmail.com)
