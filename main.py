@@ -173,7 +173,7 @@ def run_code():
         file.write('File name and directory {}\n'.format(file_name))
         file.write('\n')
         file.write('Time increment = {} s\n'.format(time_increment))
-        file.write('Fitted sinusoid amplitude = {}\n'.format(A_fit))
+        file.write('Fitted sinusoid amplitude = {} (your units)\n'.format(A_fit))
         file.write('Fitted sinusoid frequency = {} Hz\n'.format(f_fit))
         file.write('Fitted sinusoid phase = {} rads\n'.format(ph_fit))
         file.write('Fitted sinusoid phase = {} degrees\n'.format(ph_degrees))
