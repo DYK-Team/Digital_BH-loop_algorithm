@@ -143,14 +143,6 @@ def run_code():
     print('Fitted phase = ', ph_fit, ' rads')
     print('Fitted phase = ', ph_degrees, ' degrees')
 
-    # Writing the parameters to the txt file
-    with open(directory_path + '\\' + 'sinusoid_parameters.txt', 'w') as file:
-        file.write('\n')
-        file.write('Fitted amplitude = {}\n'.format(A_fit))
-        file.write('Fitted frequency = {} Hz\n'.format(f_fit))
-        file.write('Fitted phase = {} rads\n'.format(ph_fit))
-        file.write('Fitted phase = {} degrees\n'.format(ph_degrees))
-
     # Calculation of the reference time points t123 used in the numerical integration
     if scenario == 1:  # First scenario sin_values[0] >= 0
         t1 = (3.0 * pi / 2.0 - ph_fit) / (2.0 * pi * f_fit)
@@ -174,6 +166,28 @@ def run_code():
     print('Reference index 1 = ', refindex1)
     print('Reference index 2 = ', refindex2)
     print('Reference index 3 = ', refindex3)
+
+    # Writing the parameters to the txt file
+    with open(directory_path + '\\' + 'signal_parameters.txt', 'w') as file:
+        file.write('\n')
+        file.write('File name and directory {}\n'.format(file_name))
+        file.write('\n')
+        file.write('Time increment = {} s\n'.format(time_increment))
+        file.write('Fitted sinusoid amplitude = {}\n'.format(A_fit))
+        file.write('Fitted sinusoid frequency = {} Hz\n'.format(f_fit))
+        file.write('Fitted sinusoid phase = {} rads\n'.format(ph_fit))
+        file.write('Fitted sinusoid phase = {} degrees\n'.format(ph_degrees))
+        file.write('\n')
+        file.write('B-scale = {} \n'.format(B_scale))
+        file.write('H-scale = {} \n'.format(H_scale))
+        file.write('\n')
+        file.write('Reference time t1 = {} s \n'.format(t1))
+        file.write('Reference time t2 = {} s \n'.format(t2))
+        file.write('Reference time t3 = {} s \n'.format(t3))
+        file.write('\n')
+        file.write('Reference index 1 = {} \n'.format(refindex1))
+        file.write('Reference index 2 = {} \n'.format(refindex2))
+        file.write('Reference index 3 = {} \n'.format(refindex3))
 
     # Plot the original data and the fitted curve
     plt.figure(figsize=(10, 6))
