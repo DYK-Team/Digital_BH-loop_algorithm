@@ -222,7 +222,7 @@ def run_code():
     lf = len(B_forward)  # Number of points in the forward BH curve
     B_reverse = np.array(B_reverse) * B_scale
     H_reverse = -np.array(H_reverse) * H_scale
-    lr = len(B_reverse)  # Number of points in the reverse MH curve
+    lr = len(B_reverse)  # Number of points in the reverse BH curve
 
     # Defining the concavity con_forward of the forward BH curve
     # B = af + bf * H is the straight line between the forward BH curve ends
