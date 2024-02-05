@@ -1,7 +1,7 @@
 #
 # Digital BH-loop algorithm
 # Project repository on GitHub: https://github.com/DYK-Team/Digital_BH-loop_algorithm
-# created 15/10/2023; updated 30.01.2024
+# created 15/10/2023; updated 30.01.2024; updated 02.02.2024
 #
 # Authors:
 # Ekaterina Nefedova, Dr. Mark Nemirovich, Dr. Nikolay Udanov, and Prof. Larissa Panina
@@ -62,6 +62,8 @@ def run_code():
     def pset(start, y_values):
         positive_set = []
         i = start
+        while y_values[i] <= A0 * 0.9:
+            i += 1
         while i <= N - 1 and y_values[i] >= 0:
             if A0 * 0.9 <= y_values[i] <= A0:
                 positive_set.append(i)
@@ -73,6 +75,8 @@ def run_code():
     def nset(start, y_values):
         negative_set = []
         i = start
+        while y_values[i] >= -A0 * 0.9:
+            i += 1
         while i <= N - 1 and y_values[i] <= 0:
             if -A0 <= y_values[i] <= -A0 * 0.9:
                 negative_set.append(i)
@@ -82,6 +86,7 @@ def run_code():
 
     if scenario == 1:
         negative_set, stop = nset(start, sin_values)
+        print('stop = ', stop)
         positive_set = pset(stop, sin_values)[0]
     elif scenario == 2:
         positive_set, stop = pset(start, sin_values)
