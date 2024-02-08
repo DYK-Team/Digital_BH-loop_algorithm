@@ -1,4 +1,4 @@
-Digital BH-loop algorithm for calculating magnetic hysteresis loops. Last update 01.02.2024
+Digital BH-loop algorithm for calculating magnetic hysteresis loops. Last update 08.02.2024
 
 The program can be launched in two ways. The executable file "BH.exe" is located in the "dist" folder. Enter the input parameters: copy-paste the directory path, enter the file name without extension (e.g. 50kHz), amend B-scale and H-scale (1 by default), and choose the moving average window (3 by default). If you have a Python IDE, for example PyCharm, Run "BH.py" for GUI. 
 
