@@ -1,7 +1,7 @@
 #
 # Digital BH-loop algorithm
 # Project repository on GitHub: https://github.com/DYK-Team/Digital_BH-loop_algorithm
-# created 15/10/2023; updated 30.01.2024; updated 02.02.2024
+# created 15/10/2023; updated 30.01.2024; updated 02.02.2024; updated 08.02.2024
 #
 # Authors:
 # Ekaterina Nefedova, Dr. Mark Nemirovich, Dr. Nikolay Udanov, and Prof. Larissa Panina
@@ -21,7 +21,7 @@ import tkinter as tk
 pi = np.pi  # pi-constant 3.1415....
 default_B_scale = 1.0  # This scale depends on the measurement units (V or mV) and the wire length and diameter
 default_H_scale = 1.0  # This scale depends on the measurement units (V or mV) and the wire length and diameter
-default_window_size = 5  # Moving Average Window. You can change from the GUI window.
+default_window_size = 3  # Moving Average Window. You can change from the GUI window.
 
 # Function to run the code with the entered parameters
 def run_code():
@@ -220,7 +220,8 @@ def run_code():
     H_forward = []
     integral_value = 0.0
     for i in range(refindex1, refindex2):
-        H_forward.append(sin_values[i])
+        H_forward.append(sinusoid_fit[i])  # values taken from the fitting sinusoid
+        # H_forward.append(sin_values[i])  # experimental values
         for i in range(refindex1, i):
             integral_value += 0.5 * (response_values[i] + response_values[i + 1]) * time_increment  # Trapezoid method
         B_forward.append(integral_value)
@@ -230,7 +231,8 @@ def run_code():
     H_reverse = []
     integral_value = 0.0
     for i in range(refindex2, refindex3):
-        H_reverse.append(sin_values[i])
+        H_reverse.append(sinusoid_fit[i])  # values taken from the fitting sinusoid
+        # H_reverse.append(sin_values[i])  # experimental values
         for i in range(refindex2, i):
             integral_value += 0.5 * (response_values[i] + response_values[i + 1]) * time_increment  # Trapezoid method
         B_reverse.append(integral_value)
