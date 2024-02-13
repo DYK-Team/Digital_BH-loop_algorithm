@@ -10,5 +10,5 @@ Authors:
 Ekaterina Nefedova, Dr. Mark Nemirovich, Dr. Nikolay Udanov, and Prof. Larissa Panina,
 MISiS, Moscow, Russia, https://en.misis.ru/
 
-Dr. Dmitriy Makhnovskiy (dmitriy.makhnovskiy@gmail.com),
+Dr. Dmitriy Makhnovskiy,
 DYK+ team, United Kingdom, www.dykteam.com
